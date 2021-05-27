@@ -12,10 +12,6 @@ import "./styles.css";
 
 extend({ OrbitControls });
 
-require('react-dom');
-window.React2 = require('react');
-console.log(window.React1 === window.React2);
-
 function Loading() {
   return (
     <mesh visible position={[0, 0, 0]} rotation={[0, 0, 0]}>
