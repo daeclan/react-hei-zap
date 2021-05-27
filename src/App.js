@@ -18,9 +18,9 @@ function Loading() {
       <sphereGeometry attach="geometry" args={[1, 16, 16]} />
       <meshStandardMaterial
         attach="material"
-        color="white"
+        color="black"
         transparent
-        opacity={0.6}
+        opacity={1.0}
         roughness={1}
         metalness={0}
       />
@@ -31,15 +31,12 @@ function Loading() {
 function DaZapper() {
   const group = useRef();
   const { nodes } = useLoader(GLTFLoader, "./models/zapper.gltf");
-  useFrame(() => {
-    group.current.rotation.y += 0.004;
-  });
   return (
     <group>
-      <mesh visible geometry={nodes.Default.geometry}>
+      <mesh visible geometry={nodes.geometry}>
         <meshStandardMaterial
           attach="material"
-          color="white"
+          color="black"
           roughness={0.3}
           metalness={0.3}
         />
@@ -82,6 +79,7 @@ export default function App() {
         <directionalLight intensity={0.5} />
         <Suspense fallback={<Loading />}>
           <DaZapper />
+          <Loading />
         </Suspense>
       </Canvas>
     </>
