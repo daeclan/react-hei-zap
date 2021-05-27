@@ -1,12 +1,20 @@
-import React, { Suspense } from "react";
-import { Canvas, useLoader, useFrame } from "react-three-fiber";
+import React, { Suspense, useRef } from "react";
+import {
+  Canvas,
+  useLoader,
+  useFrame,
+  extend,
+  useThree
+} from "react-three-fiber";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import "./styles.css";
 
+extend({ OrbitControls });
 
-export default function App() {
-  return <Canvas style={{ background: "#171717" }}></Canvas>;
-}
+require('react-dom');
+window.React2 = require('react');
+console.log(window.React1 === window.React2);
 
 function Loading() {
   return (
@@ -24,7 +32,7 @@ function Loading() {
   );
 }
 
-function daZapper() {
+function DaZapper() {
   const group = useRef();
   const { nodes } = useLoader(GLTFLoader, "./models/zapper.gltf");
   useFrame(() => {
@@ -44,13 +52,42 @@ function daZapper() {
   );
 }
 
+const CameraControls = () => {
+  // Get a reference to the Three.js Camera, and the canvas html element.
+  // We need these to setup the OrbitControls class.
+  // https://threejs.org/docs/#examples/en/controls/OrbitControls
+
+  const {
+    camera,
+    gl: { domElement }
+  } = useThree();
+
+  // Ref to the controls, so that we can update them on every frame using useFrame
+  const controls = useRef();
+  useFrame(state => controls.current.update());
+  return (
+    <orbitControls
+      ref={controls}
+      args={[camera, domElement]}
+      enableZoom={false}
+      maxAzimuthAngle={Math.PI / 4}
+      maxPolarAngle={Math.PI}
+      minAzimuthAngle={-Math.PI / 4}
+      minPolarAngle={0}
+    />
+  );
+};
+
 export default function App() {
   return (
-    <Canvas style={{ background: "#171717" }}>
-      <directionalLight intensity={0.5} />
-      <Suspense fallback={<Loading />}>
-        <daZapper />
-      </Suspense>
-    </Canvas>
+    <>
+      <Canvas style={{ background: "white" }}>
+        <CameraControls />
+        <directionalLight intensity={0.5} />
+        <Suspense fallback={<Loading />}>
+          <DaZapper />
+        </Suspense>
+      </Canvas>
+    </>
   );
 }
