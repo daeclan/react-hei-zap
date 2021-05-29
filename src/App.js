@@ -79,7 +79,6 @@ export default function App() {
         <directionalLight intensity={0.5} />
         <Suspense fallback={<Loading />}>
           <DaZapper />
-          <Loading />
         </Suspense>
       </Canvas>
     </>
